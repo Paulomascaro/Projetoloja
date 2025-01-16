@@ -9,11 +9,12 @@ namespace Projetoloja.backend.respositories
 {
     public interface IUsuarioRepository
     {
-        Task<IEnumerable<Usuario>> GetUsuariosAsync();
-        Task<Usuario> GetUsuarioByIdAsync(int id);
-        Task AddUsuarioAsync(Usuario usuario);
-        Task UpdateUsuarioAsync(Usuario usuario);
-        Task DeleteUsuarioAsync(int id);
+        //Task<IEnumerable<Usuario>> GetUsuariosAsync();
+        //Task<Usuario> GetUsuarioByIdAsync(int id);
+        //Task AddUsuarioAsync(Usuario usuario);
+        //Task UpdateUsuarioAsync(Usuario usuario);
+        //Task DeleteUsuarioAsync(int id);
+        void insertUser(string nome, string email, string senha, string tipo);
     }
-    
+
 }

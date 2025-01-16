@@ -6,45 +6,57 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.Entity;
+using System.Windows.Forms;
+using System.IO;
+using MySql.Data.MySqlClient;
 
 
 namespace Projetoloja.backend.respositories
 {
     public class UsuarioRepository : IUsuarioRepository
     {
-        private readonly DatabaseContext _context;
 
-        public UsuarioRepository(DatabaseContext context)
+        public UsuarioRepository()
         {
-            _context = context;
+
         }
 
-        public async Task<IEnumerable<Usuario>> GetUsuariosAsync() =>
-            await _context.Usuarios.ToListAsync();
-
-        public async Task<Usuario> GetUsuarioByIdAsync(int id) =>
-            await _context.Usuarios.FindAsync(id);
-
-        public async Task AddUsuarioAsync(Usuario usuario)
+        public void insertUser(string nome, string email, string senha, string tipo)
         {
-            _context.Usuarios.Add(usuario);
-            await _context.SaveChangesAsync();
-        }
+            #region MySQL
 
-        public async Task UpdateUsuarioAsync(Usuario usuario)
-        {
-            _context.Entry(usuario).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-        }
+            string strConnection = "server=127.0.0.1;User Id=root;database=projetoloja_db";
+            MySqlConnection conexao = new MySqlConnection(strConnection);
 
-        public async Task DeleteUsuarioAsync(int id)
-        {
-            var usuario = await _context.Usuarios.FindAsync(id);
-            if (usuario != null)
+            try
             {
-                _context.Usuarios.Remove(usuario);
-                await _context.SaveChangesAsync();
+                conexao.Open();
+
+                string sql = "INSERT INTO usuario (nome, email, senha, tipo) VALUES (@nome, @email, @senha, @tipo)";
+
+                using (MySqlCommand comando = new MySqlCommand(sql, conexao))
+                {
+                    // Define os parâmetros
+                    comando.Parameters.AddWithValue("@nome", nome);
+                    comando.Parameters.AddWithValue("@email", email);
+                    comando.Parameters.AddWithValue("@senha", senha);
+                    comando.Parameters.AddWithValue("@tipo", tipo);
+
+                    // Executa o comando
+                    comando.ExecuteNonQuery();
+                }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erro: " + ex.Message);
+            }
+            finally
+            {
+                MessageBox.Show("deu certo");
+                conexao.Close();
+            }
+
+            #endregion
         }
     }
 }

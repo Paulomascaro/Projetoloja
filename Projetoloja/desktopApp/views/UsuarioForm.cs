@@ -10,11 +10,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Projetoloja.backend.database;
 
 namespace Projetoloja.desktopApp.views
 {
     public partial class UsuarioForm : Form
     {
+        DatabaseContext connect = new DatabaseContext();
+        UsuarioRepository usuarioRepository = new UsuarioRepository();
+
+
         public UsuarioForm()
         {
             InitializeComponent();
@@ -22,32 +27,31 @@ namespace Projetoloja.desktopApp.views
 
         private void UsuarioForm_Load(object sender, EventArgs e)
         {
+
             cmbTipoUsuario.Items.Add("Admin");
             cmbTipoUsuario.Items.Add("Gerente");
             cmbTipoUsuario.Items.Add("Caixa");
             cmbTipoUsuario.Items.Add("Vendedor");
 
             cmbTipoUsuario.SelectedIndex = 0; // Seleciona o primeiro item por padrão
+
         }
 
         private void btnCadastrarUsuario_Click(object sender, EventArgs e)
         {
-            using (var context = new DatabaseContext())
+
+            if (string.IsNullOrWhiteSpace(txtNome.Text) ||
+                string.IsNullOrWhiteSpace(txtEmail.Text) ||
+                string.IsNullOrWhiteSpace(txtSenha.Text) ||
+                cmbTipoUsuario.SelectedItem == null)
             {
-                var repository = new UsuarioRepository(context);
-                var usuario = new Usuario
-                {
-                    Nome = txtNome.Text,
-                    Email = txtEmail.Text,
-                    Senha = txtSenha.Text,
-                    TipoUsuario = cmbTipoUsuario.SelectedItem.ToString()
-                };
-
-                repository.AddUsuarioAsync(usuario);
-
-                MessageBox.Show("Usuário cadastrado com sucesso!");
-                LimparCampos();
+                MessageBox.Show("Por favor, preencha todos os campos.");
+                return;
             }
+            usuarioRepository.insertUser(txtNome.Text, txtEmail.Text, txtSenha.Text, cmbTipoUsuario.Text);
+
+                //MessageBox.Show("Usuário cadastrado com sucesso!");
+                LimparCampos();
         }
 
         private void LimparCampos()

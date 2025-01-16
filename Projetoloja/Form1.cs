@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Projetoloja.desktopApp.views;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -15,6 +16,14 @@ namespace Projetoloja
         public Form1()
         {
             InitializeComponent();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            UsuarioForm usuarioForm = new UsuarioForm();
+            usuarioForm.Show(); // Mostra o formulário de usuários
+            
+
         }
     }
 }
